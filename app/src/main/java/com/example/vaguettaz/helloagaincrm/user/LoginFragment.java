@@ -10,8 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.vaguettaz.helloagaincrm.R;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +26,9 @@ public class LoginFragment extends Fragment {
 
     private static final String TAG = "LoginFragment";
     private LoginListener mListener;
+
+    @Bind(R.id.loginName) TextView mLoginName;
+    @Bind(R.id.loginPassword) TextView mLoginPassword;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -43,20 +51,32 @@ public class LoginFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        // obsolete with bind
+        //final TextView loginNameTv = (TextView) view.findViewById(R.id.loginName);
+        //final TextView loginPasswordTv = (TextView) view.findViewById(R.id.loginPassword);
+        ButterKnife.bind(this, view);
+
+        /*
         Button loginButton = (Button) view.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClickListener");
-                mListener.onLoginClicked();
+                mListener.onLoginClicked(mLoginName.getText(), mLoginPassword.getText());
             }
         });
         // Inflate the layout for this fragment
+        */
         return view;
     }
 
+    @OnClick(R.id.loginButton)
+    void OnClick(View v) {
+        mListener.onLoginClicked(mLoginName.getText(), mLoginPassword.getText());
+    }
+
     public interface LoginListener {
-        void onLoginClicked();
+        void onLoginClicked(CharSequence loginName, CharSequence passwordName);
     }
 
 

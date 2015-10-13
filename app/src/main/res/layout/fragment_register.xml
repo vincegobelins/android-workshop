@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vaguettaz.helloagaincrm.user.LoginFragment">
+    tools:context="com.example.vaguettaz.helloagaincrm.user.RegisterFragment">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
@@ -16,8 +16,8 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
-            android:id="@+id/loginName"
-            android:hint="@string/login.name"
+            android:id="@+id/registerName"
+            android:hint="email inscription"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             tools:text="name"/>
@@ -36,8 +36,8 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/loginPassword"
-            android:hint="@string/password.name"
+            android:id="@+id/registerPassword"
+            android:hint="Mot de passe inscription"
             android:layout_below="@+id/editText"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="46dp" />
@@ -47,10 +47,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/loginButton"
-        android:layout_below="@+id/editText3"
+        android:text="Register"
+        android:id="@+id/registerButton"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="103dp" />
+        android:layout_marginBottom="101dp" />
 
 </RelativeLayout>
+
