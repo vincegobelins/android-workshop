@@ -62,11 +62,16 @@ public class FirebaseManager {
             public void onSuccess(Map<String, Object> result) {
                 mListener.onSuccess((String) result.get("uid"));
             }
+
             @Override
             public void onError(FirebaseError firebaseError) {
                 mListener.onError();
             }
         });
+    }
+
+    public void logout(){
+        myFirebaseRef.unauth();
     }
 
     public interface FirebaseListener {
