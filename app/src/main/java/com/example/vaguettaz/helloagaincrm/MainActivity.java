@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.vaguettaz.helloagaincrm.user.FirebaseManager;
 import com.example.vaguettaz.helloagaincrm.user.LoginFragment;
 import com.example.vaguettaz.helloagaincrm.user.RegisterFragment;
 import com.firebase.client.AuthData;
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
 
         // Init database
         Firebase.setAndroidContext(this);
-        myFirebaseRef = new Firebase("https://chatandroidgobelins.firebaseio.com");
         //View mainContainer = findViewById(R.id.mainContainer);
 
 
@@ -97,13 +97,20 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
         registerUser(registerName, registerPassword);
     }
 
+
     private void authenticateUser(CharSequence registerName, CharSequence registerPassword){
 
-        // try to authenticate to firebase
-        myFirebaseRef.authWithPassword(registerName.toString(), registerPassword.toString(), new Firebase.AuthResultHandler() {
+        FirebaseManager.getInstance().authenticate(registerName, registerPassword, new FirebaseManager.FirebaseListener() {
             @Override
-            public void onAuthenticated(AuthData authData) {
-                Snackbar.make(findViewById(R.id.mainContainer), "Utilisateur connecté : " + authData.getUid(), Snackbar.LENGTH_LONG)
+            public void onSuccess(String userID) {
+                Intent intent = new Intent(MainActivity.this, UserActivity.class);
+                startActivity(intent);
+                System.out.println("l utilisateur est loggé");
+            }
+
+            @Override
+            public void onError() {
+                Snackbar.make(findViewById(R.id.mainContainer), "L'authentification a échoué", Snackbar.LENGTH_LONG)
                         .setAction("UNDO", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -111,28 +118,20 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
                             }
                         })
                         .show();
-
-                // start user activity
-                Intent intent = new Intent(MainActivity.this, UserActivity.class);
-                intent.putExtra(EXTRA_UID, authData.getUid());
-                startActivity(intent);
-            }
-            @Override
-            public void onAuthenticationError(FirebaseError firebaseError) {
-                // there was an error
             }
         });
+
     }
 
     private void registerUser(CharSequence registerName, CharSequence registerPassword){
 
         // try to register to firebase
 
-        myFirebaseRef.createUser(registerName.toString(), registerPassword.toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
+        FirebaseManager.getInstance().register(registerName, registerPassword, new FirebaseManager.FirebaseListener() {
             @Override
-            public void onSuccess(Map<String, Object> result) {
-                Snackbar.make(findViewById(R.id.mainContainer), "Utilisateur créé : " + result.get("uid"), Snackbar.LENGTH_LONG)
-                        .setAction("UNDO", new View.OnClickListener() {
+            public void onSuccess(String userID) {
+                Snackbar.make(findViewById(R.id.mainContainer), "Utilisateur créé : " + userID, Snackbar.LENGTH_LONG)
+                        .setAction("LOGIN", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Log.d(TAG, "closed");
@@ -140,10 +139,17 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
                         })
                         .show();
             }
+
             @Override
-            public void onError(FirebaseError firebaseError) {
-                // there was an error
-                System.out.println("ERROR ");
+            public void onError() {
+                Snackbar.make(findViewById(R.id.mainContainer), "L'inscription n'a pas fonctionné", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d(TAG, "closed");
+                            }
+                        })
+                        .show();
             }
         });
     }
